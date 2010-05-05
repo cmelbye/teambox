@@ -147,6 +147,10 @@ module ProjectsHelper
 
     "autorefresh = setInterval(\"#{ajax_request}\", #{interval})"
   end
+  
+  def activity_push(project)
+    "activityPush = new ActivityPush(#{project.id}); activityPush.request();"
+  end
 
   def options_for_owner(people)
     people.map {|person| [ person.name, person.user_id ]}

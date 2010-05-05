@@ -186,6 +186,43 @@ Group = {
   }
 }
 
+ActivityPush = Class.create({
+    project_id: null,
+    last_modified: null,
+    
+    initialize: function (id) {
+        this.project_id = id;
+    },
+    
+    request: function () {
+        if(this.project_id == null) { window.console.log("Project id is not set"); return; }
+        
+        window.console.log("Waiting for push...");
+        // PubSub id is project:<id>:activities
+        new Ajax.Request('/push_activity?id=project:' + this.project_id + ':activities', {
+            method: 'get',
+            headers: {""},
+            onSuccess: function (transport) {
+                window.console.log("Push received, processing...");
+                var obj = transport.responseText.evalJSON();
+                window.console.log(this.process); // *undefined*
+                this.process(obj);
+                
+                this.request();
+            }
+        });
+    },
+    
+    process: function (obj) {
+        window.console.log(obj);
+    },
+    
+    headers: function () {
+        h = {}
+        h['If-Modified-Since']
+    }
+});
+
 if (false) document.on('dom:loaded', function() {
   new Cropper.ImgWithPreview('avatar_crop', {
     minWidth: 55,
